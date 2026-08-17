@@ -14,19 +14,19 @@ export class MemberResolver {
     try {
       console.log('Mutation: signup');
       console.log('input:', input);
-      return this.memberService.signup();
+      return this.memberService.signup(input);
     } catch (err) {
       console.log('Error, signup:', err);
       throw new InternalServerErrorException(err);
     }
   }
 
-  @Mutation(() => String)
+  @Mutation(() => Member)
   @UsePipes(ValidationPipe)
-  public async login(@Args('input') input: LoginInput): Promise<string> {
+  public async login(@Args('input') input: LoginInput): Promise<Member> {
     try {
       console.log('Mutation: login');
-      return this.memberService.login();
+      return this.memberService.login(input);
     } catch (err) {
       console.log('Error, signup:', err);
       throw new InternalServerErrorException(err);
