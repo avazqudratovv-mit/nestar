@@ -1,7 +1,6 @@
 import { Schema } from 'mongoose';
 import { ViewGroup } from '../enums/view.enum';
 
-
 const ViewSchema = new Schema(
 	{
 		viewGroup: {
