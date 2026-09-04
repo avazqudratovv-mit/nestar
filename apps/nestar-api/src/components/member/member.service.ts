@@ -21,7 +21,7 @@ export class MemberService {
 		private readonly memberModel: Model<Member>,
 		private authService: AuthService,
 		private viewService: ViewService,
-		private LikeService: LikeService,
+		private likeService: LikeService,
 	) {}
 
 	public async signup(input: MemberInput): Promise<Member> {
@@ -91,6 +91,10 @@ export class MemberService {
 				await this.memberModel.findOneAndUpdate(search, { $inc: { memberViews: 1 } }, { new: true }).exec();
 				targetMember.memberViews++;
 			}
+			
+			const likeInput = { memberId: memberId, likeRefId: targetId, likeGroup: LikeGroup.MEMBER };
+			targetMember.meLiked = await this.likeService.checkLikeExistence(likeInput);
+			// meFollowed
 		}
 
 		return targetMember;
@@ -131,7 +135,7 @@ export class MemberService {
     	};
 
     	// LIKE TOGGLE via Like modules
-    	const modifier: number = await this.LikeService.toggleLike(input);
+    	const modifier: number = await this.likeService.toggleLike(input);
     	const result = await this.memberStatsEditor({ _id: likeRefId, targetKey: 'memberLikes', modifier: modifier });
 
     	if (!result) throw new InternalServerErrorException(Message.SOMETHING_WENT_WRONG);
